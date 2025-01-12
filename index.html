@@ -298,6 +298,14 @@
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script src="./form.js"></script>
   <script src="./navbar.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    var audio = document.getElementById('background-music');
+    audio.play().catch(function(error) {
+      console.log('Autoplay was prevented:', error);
+    });
+  });
+</script>
   <script src="./three.js"></script>
   <script type="application/ld+json">
     {
