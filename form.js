@@ -1,3 +1,11 @@
+//   EmailJS Integration
+
+(function () {
+    emailjs.init("dANBulEYT6q93M-p4"); // Replace with your EmailJS user ID
+})();
+
+const form = document.querySelector("form");
+
 form.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -13,18 +21,6 @@ form.addEventListener("submit", (event) => {
         alert("Please enter a valid email address.");
         return;
     }
-});
-
-//   EmailJS Integration
-
-(function () {
-    emailjs.init("dANBulEYT6q93M-p4"); // Replace with your EmailJS user ID
-})();
-
-const form = document.querySelector("form");
-
-form.addEventListener("submit", (event) => {
-    event.preventDefault();
 
     emailjs
         .sendForm("service_7pidedw", "template_ulnri3s", form)
