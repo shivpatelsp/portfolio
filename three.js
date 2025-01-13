@@ -5,6 +5,17 @@ const audio = document.getElementById('background-music');
 let numParticles = 150; // Number of particles
 let particles = [];
 
+// Create AudioContext but don't start it immediately
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const source = audioCtx.createMediaElementSource(audio);
+const analyser = audioCtx.createAnalyser();
+analyser.fftSize = 256;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+
+// Initialize canvas size and particles
 function resizeCanvas() {
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
@@ -26,20 +37,8 @@ function resizeCanvas() {
   }
 }
 
-// Initialize canvas size and particles
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas); // Adjust canvas size dynamically
-
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const source = audioCtx.createMediaElementSource(audio);
-const analyser = audioCtx.createAnalyser();
-analyser.fftSize = 256;
-const bufferLength = analyser.frequencyBinCount;
-const dataArray = new Uint8Array(bufferLength);
-source.connect(analyser);
-analyser.connect(audioCtx.destination);
-
-audio.play();
 
 function draw() {
   requestAnimationFrame(draw);
@@ -84,4 +83,31 @@ function draw() {
   }
 }
 
+// Debugging wrapper for scroll-based activation
+function activateAudio() {
+  console.log('Attempting to activate audio...');
+
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().then(() => {
+      console.log('AudioContext resumed.');
+      audio.play().then(() => {
+        console.log('Audio playback started.');
+      }).catch((error) => {
+        console.error('Error starting audio playback:', error);
+      });
+    }).catch((error) => {
+      console.error('Error resuming AudioContext:', error);
+    });
+  } else {
+    console.log('AudioContext already running.');
+    audio.play().catch((error) => {
+      console.error('Error starting audio playback:', error);
+    });
+  }
+}
+
+// Start audio and visualizer on scroll
+window.addEventListener('scroll', activateAudio, { once: true });
+
+// Start the visualizer immediately
 draw();
