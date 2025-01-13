@@ -66,6 +66,7 @@ const canvas = document.getElementById('visualizer');
       if (audioCtx.state === 'suspended') {
         audioCtx.resume().then(() => {
           console.log("AudioContext resumed.");
+          audio.volume = 0.25; // Limit volume to 25%
           audio.play().then(() => {
             console.log('Audio playback started.');
             draw(); // Start visualizer
